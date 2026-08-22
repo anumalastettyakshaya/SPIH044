@@ -1,683 +1,1878 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SportSphere — One network for players, coaches &amp; courts</title>
-<meta name="description" content="SportSphere connects players, coaches and organizers through sport-centric profiles, AI compatibility matching and gated connections.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --turf:#0F3D2E;
-    --turf-dark:#0A2B20;
-    --turf-light:#155A41;
-    --chalk:#F6F3EA;
-    --chalk-dim:#E7E2D3;
-    --amber:#FFB627;
-    --coral:#FF6152;
-    --ink:#12201A;
-    --line:rgba(246,243,234,0.14);
-    --line-dark:rgba(18,32,26,0.12);
-    --display:'Bebas Neue', sans-serif;
-    --body:'Space Grotesk', sans-serif;
-    --mono:'IBM Plex Mono', monospace;
-    --max:1180px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    font-family:var(--body);
-    background:var(--chalk);
-    color:var(--ink);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  img,svg{display:block; max-width:100%;}
-  a{color:inherit;}
-  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
-  h1,h2,h3{font-family:var(--display); letter-spacing:0.01em; line-height:0.95; text-transform:uppercase; font-weight:400;}
-  .eyebrow{
-    font-family:var(--mono); text-transform:uppercase; letter-spacing:0.14em;
-    font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:8px;
-  }
-  .eyebrow::before{content:''; width:7px; height:7px; border-radius:50%; background:currentColor; display:inline-block;}
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    font-family:var(--body); font-weight:600; font-size:15px;
-    padding:14px 26px; border-radius:999px; border:2px solid transparent;
-    cursor:pointer; text-decoration:none; transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
-    white-space:nowrap;
-  }
-  .btn:active{transform:translateY(1px);}
-  .btn-primary{background:var(--amber); color:var(--turf-dark);}
-  .btn-primary:hover{box-shadow:0 8px 24px -8px rgba(255,182,39,0.65); transform:translateY(-2px);}
-  .btn-ghost{background:transparent; color:var(--chalk); border-color:var(--line);}
-  .btn-ghost:hover{border-color:var(--chalk); background:rgba(246,243,234,0.06);}
-  .btn-dark{background:var(--turf); color:var(--chalk);}
-  .btn-dark:hover{box-shadow:0 8px 24px -8px rgba(15,61,46,0.5); transform:translateY(-2px);}
-  section{padding:96px 0;}
-  @media(max-width:720px){ section{padding:64px 0;} }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KhelConnect — One network for players, coaches &amp; courts</title>
+  <meta name="description"
+    content="SportSphere connects players, coaches and organizers through sport-centric profiles, AI compatibility matching and gated connections.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --turf: #0F3D2E;
+      --turf-dark: #0A2B20;
+      --turf-light: #155A41;
+      --chalk: #F6F3EA;
+      --chalk-dim: #E7E2D3;
+      --amber: #FFB627;
+      --coral: #FF6152;
+      --ink: #12201A;
+      --line: rgba(246, 243, 234, 0.14);
+      --line-dark: rgba(18, 32, 26, 0.12);
+      --display: 'Bebas Neue', sans-serif;
+      --body: 'Space Grotesk', sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+      --max: 1180px;
+    }
 
-  /* ---------- NAV ---------- */
-  header{
-    position:sticky; top:0; z-index:100;
-    background:rgba(15,61,46,0.92); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; color:var(--chalk);}
-  .logo{font-family:var(--display); font-size:26px; letter-spacing:0.03em; text-decoration:none; color:var(--chalk); display:flex; align-items:center; gap:8px;}
-  .logo-dot{width:10px; height:10px; border-radius:2px; background:var(--amber); transform:rotate(45deg);}
-  .nav-links{display:flex; gap:32px; list-style:none; align-items:center;}
-  .nav-links a{font-size:14px; font-weight:500; text-decoration:none; color:var(--chalk); opacity:0.85; transition:opacity .15s;}
-  .nav-links a:hover{opacity:1;}
-  .nav-cta{display:flex; align-items:center; gap:16px;}
-  .burger{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:8px;}
-  .burger span{width:22px; height:2px; background:var(--chalk); display:block;}
-  .mobile-menu{display:none; flex-direction:column; gap:0; background:var(--turf-dark); border-top:1px solid var(--line);}
-  .mobile-menu a{color:var(--chalk); text-decoration:none; padding:16px 24px; border-bottom:1px solid var(--line); font-size:15px; font-weight:500;}
-  .mobile-menu.open{display:flex;}
-  @media(max-width:860px){
-    .nav-links{display:none;}
-    .nav-cta .btn-ghost{display:none;}
-    .burger{display:flex;}
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ---------- HERO ---------- */
-  .hero{
-    background:radial-gradient(120% 140% at 15% -10%, var(--turf-light) 0%, var(--turf) 45%, var(--turf-dark) 100%);
-    color:var(--chalk); position:relative; overflow:hidden; padding-top:88px; padding-bottom:64px;
-  }
-  .hero::before{
-    content:''; position:absolute; inset:0;
-    background-image:repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(246,243,234,0.05) 79px, rgba(246,243,234,0.05) 80px);
-    pointer-events:none;
-  }
-  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; position:relative;}
-  @media(max-width:960px){ .hero-grid{grid-template-columns:1fr; gap:48px;} }
-  .hero .eyebrow{color:var(--amber); margin-bottom:20px;}
-  .hero h1{font-size:clamp(40px,6.4vw,74px); margin-bottom:22px;}
-  .hero h1 em{font-style:normal; color:var(--amber);}
-  .hero p.lead{font-size:clamp(16px,2vw,19px); color:var(--chalk-dim); max-width:52ch; margin-bottom:34px;}
-  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:28px;}
-  .hero-note{font-family:var(--mono); font-size:12.5px; color:rgba(246,243,234,0.6); letter-spacing:0.02em;}
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* Lane diagram */
-  .lanes{position:relative; padding:12px;}
-  .lane-svg{width:100%; height:auto;}
-  .lane-card{
-    position:absolute; background:var(--chalk); color:var(--ink); border-radius:14px; padding:12px 14px;
-    font-family:var(--mono); font-size:11.5px; font-weight:600; box-shadow:0 14px 30px -12px rgba(0,0,0,0.4);
-    display:flex; align-items:center; gap:8px; letter-spacing:0.02em;
-  }
-  .lane-card .sw{width:9px; height:9px; border-radius:50%;}
+    body {
+      font-family: var(--body);
+      background: var(--chalk);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-  /* ---------- PROBLEM STRIP ---------- */
-  .problem{background:var(--chalk);}
-  .problem .head{max-width:640px; margin-bottom:48px;}
-  .problem .eyebrow{color:var(--coral);}
-  .problem h2{font-size:clamp(30px,4.4vw,46px); margin-top:12px;}
-  .problem-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line-dark); border:1px solid var(--line-dark); border-radius:16px; overflow:hidden;}
-  @media(max-width:800px){ .problem-grid{grid-template-columns:1fr;} }
-  .problem-card{background:var(--chalk); padding:32px 28px;}
-  .problem-card .tag{font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--coral); font-weight:600;}
-  .problem-card h3{font-family:var(--body); text-transform:none; font-size:19px; font-weight:700; margin:10px 0 8px; letter-spacing:0;}
-  .problem-card p{font-size:14.5px; color:#3c4a41;}
+    img,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
 
-  /* ---------- ROLES ---------- */
-  .roles{background:var(--turf-dark); color:var(--chalk);}
-  .roles .head{max-width:640px; margin:0 auto 56px; text-align:center;}
-  .roles .eyebrow{color:var(--amber); justify-content:center;}
-  .roles h2{font-size:clamp(30px,4.4vw,46px); margin-top:12px;}
-  .roles p.sub{color:var(--chalk-dim); margin-top:14px; font-size:16px;}
-  .role-tabs{display:flex; justify-content:center; gap:10px; margin-bottom:44px; flex-wrap:wrap;}
-  .role-tab{
-    font-family:var(--mono); font-size:12.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
-    padding:11px 20px; border-radius:999px; border:1px solid var(--line); background:transparent; color:var(--chalk-dim);
-    cursor:pointer; transition:all .18s;
-  }
-  .role-tab.active{background:var(--amber); color:var(--turf-dark); border-color:var(--amber);}
-  .role-panels{position:relative;}
-  .role-panel{display:none; grid-template-columns:0.9fr 1.1fr; gap:48px; align-items:center;}
-  .role-panel.active{display:grid;}
-  @media(max-width:820px){ .role-panel{grid-template-columns:1fr;} }
-  .role-visual{
-    background:var(--turf); border:1px solid var(--line); border-radius:20px; padding:32px;
-    aspect-ratio:4/3; display:flex; flex-direction:column; justify-content:space-between;
-  }
-  .role-visual .num{font-family:var(--display); font-size:64px; color:var(--amber); line-height:0.85;}
-  .role-visual .cap{font-family:var(--mono); font-size:12px; color:var(--chalk-dim); letter-spacing:0.04em;}
-  .role-copy h3{font-family:var(--body); text-transform:none; font-size:26px; font-weight:700; letter-spacing:0; margin-bottom:14px;}
-  .role-copy > p{color:var(--chalk-dim); font-size:15.5px; margin-bottom:22px;}
-  .feat-list{list-style:none; display:flex; flex-direction:column; gap:14px;}
-  .feat-list li{display:flex; gap:12px; font-size:14.5px; color:var(--chalk);}
-  .feat-list li::before{content:'✓'; color:var(--amber); font-weight:700; flex-shrink:0;}
+    a {
+      color: inherit;
+    }
 
-  /* ---------- HOW IT WORKS ---------- */
-  .how{background:var(--chalk);}
-  .how .head{max-width:640px; margin-bottom:56px;}
-  .how .eyebrow{color:var(--coral);}
-  .how h2{font-size:clamp(30px,4.4vw,46px); margin-top:12px;}
-  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:28px 24px;}
-  @media(max-width:900px){ .steps{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:600px){ .steps{grid-template-columns:1fr;} }
-  .step{position:relative; padding-top:8px;}
-  .step .n{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--turf); background:var(--chalk-dim); display:inline-block; padding:4px 9px; border-radius:6px; margin-bottom:14px;}
-  .step h3{font-family:var(--body); text-transform:none; font-size:18px; font-weight:700; letter-spacing:0; margin-bottom:8px;}
-  .step p{font-size:14px; color:#3c4a41;}
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-  /* ---------- COMPATIBILITY DEMO ---------- */
-  .demo{background:var(--turf); color:var(--chalk); position:relative; overflow:hidden;}
-  .demo-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
-  @media(max-width:900px){ .demo-grid{grid-template-columns:1fr;} }
-  .demo .eyebrow{color:var(--amber);}
-  .demo h2{font-size:clamp(28px,4vw,42px); margin:12px 0 16px;}
-  .demo p.sub{color:var(--chalk-dim); font-size:15.5px; margin-bottom:30px; max-width:48ch;}
-  .slider-row{margin-bottom:22px;}
-  .slider-row .lbl{display:flex; justify-content:space-between; font-family:var(--mono); font-size:12.5px; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.04em; color:var(--chalk-dim);}
-  .slider-row .lbl span:last-child{color:var(--amber); font-weight:600;}
-  input[type=range]{
-    -webkit-appearance:none; width:100%; height:4px; border-radius:2px; background:var(--line); outline:none;
-  }
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--amber); border:3px solid var(--turf-dark); cursor:pointer;}
-  input[type=range]::-moz-range-thumb{width:20px; height:20px; border-radius:50%; background:var(--amber); border:3px solid var(--turf-dark); cursor:pointer;}
-  .sport-select{display:flex; gap:8px; flex-wrap:wrap; margin-top:26px;}
-  .sport-chip{
-    font-family:var(--mono); font-size:12px; padding:8px 14px; border-radius:999px; border:1px solid var(--line);
-    background:transparent; color:var(--chalk-dim); cursor:pointer; transition:all .15s;
-  }
-  .sport-chip.active{background:var(--chalk); color:var(--turf-dark); border-color:var(--chalk);}
-  .scoreboard{
-    background:var(--turf-dark); border:1px solid var(--line); border-radius:22px; padding:38px;
-    display:flex; flex-direction:column; align-items:center; text-align:center;
-    box-shadow:0 30px 60px -30px rgba(0,0,0,0.5);
-  }
-  .scoreboard .tag{font-family:var(--mono); font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--chalk-dim); margin-bottom:16px;}
-  .score-num{font-family:var(--mono); font-size:clamp(64px,9vw,96px); font-weight:600; line-height:1; color:var(--amber); transition:color .25s;}
-  .score-num sup{font-size:0.35em; font-weight:600;}
-  .score-verdict{font-family:var(--body); font-weight:700; font-size:18px; margin-top:12px; letter-spacing:0.01em;}
-  .score-desc{font-size:13.5px; color:var(--chalk-dim); margin-top:8px; max-width:34ch;}
-  .score-bar{width:100%; height:6px; background:var(--line); border-radius:3px; margin-top:26px; overflow:hidden;}
-  .score-bar-fill{height:100%; background:var(--amber); border-radius:3px; transition:width .25s ease, background .25s ease;}
+    h1,
+    h2,
+    h3 {
+      font-family: var(--display);
+      letter-spacing: 0.01em;
+      line-height: 0.95;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
 
-  /* ---------- TRUST ---------- */
-  .trust{background:var(--chalk);}
-  .trust .head{max-width:640px; margin-bottom:52px;}
-  .trust .eyebrow{color:var(--coral);}
-  .trust h2{font-size:clamp(30px,4.4vw,46px); margin-top:12px;}
-  .trust-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
-  @media(max-width:900px){ .trust-grid{grid-template-columns:repeat(2,1fr);} }
-  @media(max-width:560px){ .trust-grid{grid-template-columns:1fr;} }
-  .trust-card{background:var(--turf-dark); color:var(--chalk); border-radius:16px; padding:26px 22px;}
-  .trust-card .ico{width:38px; height:38px; border-radius:10px; background:var(--amber); color:var(--turf-dark); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-weight:700; font-size:15px; margin-bottom:16px;}
-  .trust-card h3{font-family:var(--body); text-transform:none; font-size:16px; font-weight:700; letter-spacing:0; margin-bottom:6px;}
-  .trust-card p{font-size:13.5px; color:var(--chalk-dim);}
+    .eyebrow {
+      font-family: var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-  /* ---------- SPORTS TAGS ---------- */
-  .sports{background:var(--chalk); padding:56px 0; border-top:1px solid var(--line-dark); border-bottom:1px solid var(--line-dark);}
-  .sports .wrap{display:flex; align-items:center; gap:24px; flex-wrap:wrap; justify-content:space-between;}
-  .sports .lbl{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#5a6a5e; font-weight:600;}
-  .sport-tags{display:flex; gap:10px; flex-wrap:wrap;}
-  .sport-tags span{font-family:var(--body); font-weight:600; font-size:14px; padding:9px 16px; border-radius:999px; background:var(--chalk-dim); color:var(--turf-dark);}
+    .eyebrow::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+    }
 
-  /* ---------- FINAL CTA ---------- */
-  .final{
-    background:linear-gradient(160deg, var(--turf) 0%, var(--turf-dark) 100%); color:var(--chalk); text-align:center;
-  }
-  .final h2{font-size:clamp(32px,6vw,58px); max-width:16ch; margin:0 auto 18px;}
-  .final h2 em{font-style:normal; color:var(--amber);}
-  .final p{color:var(--chalk-dim); max-width:48ch; margin:0 auto 36px; font-size:16px;}
-  .waitlist{display:flex; gap:10px; max-width:460px; margin:0 auto; flex-wrap:wrap; justify-content:center;}
-  .waitlist input{
-    flex:1; min-width:220px; padding:15px 18px; border-radius:999px; border:1px solid var(--line);
-    background:rgba(246,243,234,0.06); color:var(--chalk); font-family:var(--body); font-size:15px; outline:none;
-  }
-  .waitlist input::placeholder{color:var(--chalk-dim);}
-  .waitlist input:focus{border-color:var(--amber);}
-  .form-msg{font-family:var(--mono); font-size:12.5px; margin-top:16px; min-height:18px; color:var(--amber);}
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 26px;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      white-space: nowrap;
+    }
 
-  /* ---------- FOOTER ---------- */
-  footer{background:var(--turf-dark); color:var(--chalk-dim); padding:48px 0 28px;}
-  .foot-grid{display:flex; justify-content:space-between; gap:32px; flex-wrap:wrap; padding-bottom:32px; border-bottom:1px solid var(--line); margin-bottom:24px;}
-  .foot-brand .logo{margin-bottom:10px;}
-  .foot-brand p{font-size:13.5px; max-width:32ch;}
-  .foot-cols{display:flex; gap:56px; flex-wrap:wrap;}
-  .foot-col h4{font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--chalk); margin-bottom:14px;}
-  .foot-col a{display:block; font-size:13.5px; text-decoration:none; color:var(--chalk-dim); margin-bottom:10px;}
-  .foot-col a:hover{color:var(--chalk);}
-  .foot-bottom{display:flex; justify-content:space-between; font-family:var(--mono); font-size:12px; flex-wrap:wrap; gap:10px;}
+    .btn:active {
+      transform: translateY(1px);
+    }
 
-  ::selection{background:var(--amber); color:var(--turf-dark);}
+    .btn-primary {
+      background: var(--amber);
+      color: var(--turf-dark);
+    }
 
-  [data-reveal]{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
-  [data-reveal].in{opacity:1; transform:translateY(0);}
+    .btn-primary:hover {
+      box-shadow: 0 8px 24px -8px rgba(255, 182, 39, 0.65);
+      transform: translateY(-2px);
+    }
 
-  @media(prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto;}
-    [data-reveal]{opacity:1; transform:none; transition:none;}
-    .btn:hover, .btn:active{transform:none;}
-  }
-</style>
+    .btn-ghost {
+      background: transparent;
+      color: var(--chalk);
+      border-color: var(--line);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--chalk);
+      background: rgba(246, 243, 234, 0.06);
+    }
+
+    .btn-dark {
+      background: var(--turf);
+      color: var(--chalk);
+    }
+
+    .btn-dark:hover {
+      box-shadow: 0 8px 24px -8px rgba(15, 61, 46, 0.5);
+      transform: translateY(-2px);
+    }
+
+    section {
+      padding: 96px 0;
+    }
+
+    @media(max-width:720px) {
+      section {
+        padding: 64px 0;
+      }
+    }
+
+    /* ---------- NAV ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 61, 46, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      color: var(--chalk);
+    }
+
+    .logo {
+      font-family: var(--display);
+      font-size: 26px;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      color: var(--chalk);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: var(--amber);
+      transform: rotate(45deg);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--chalk);
+      opacity: 0.85;
+      transition: opacity .15s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .burger span {
+      width: 22px;
+      height: 2px;
+      background: var(--chalk);
+      display: block;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: var(--turf-dark);
+      border-top: 1px solid var(--line);
+    }
+
+    .mobile-menu a {
+      color: var(--chalk);
+      text-decoration: none;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--line);
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    @media(max-width:860px) {
+      .nav-links {
+        display: none;
+      }
+
+      .nav-cta .btn-ghost {
+        display: none;
+      }
+
+      .burger {
+        display: flex;
+      }
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      background: radial-gradient(120% 140% at 15% -10%, var(--turf-light) 0%, var(--turf) 45%, var(--turf-dark) 100%);
+      color: var(--chalk);
+      position: relative;
+      overflow: hidden;
+      padding-top: 88px;
+      padding-bottom: 64px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(246, 243, 234, 0.05) 79px, rgba(246, 243, 234, 0.05) 80px);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+      position: relative;
+    }
+
+    @media(max-width:960px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    .hero .eyebrow {
+      color: var(--amber);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6.4vw, 74px);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .hero p.lead {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--chalk-dim);
+      max-width: 52ch;
+      margin-bottom: 34px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .hero-note {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: rgba(246, 243, 234, 0.6);
+      letter-spacing: 0.02em;
+    }
+
+    /* Lane diagram */
+    .lanes {
+      position: relative;
+      padding: 12px;
+    }
+
+    .lane-svg {
+      width: 100%;
+      height: auto;
+    }
+
+    .lane-card {
+      position: absolute;
+      background: var(--chalk);
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .lane-card .sw {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    /* ---------- PROBLEM STRIP ---------- */
+    .problem {
+      background: var(--chalk);
+    }
+
+    .problem .head {
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+
+    .problem .eyebrow {
+      color: var(--coral);
+    }
+
+    .problem h2 {
+      font-size: clamp(30px, 4.4vw, 46px);
+      margin-top: 12px;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--line-dark);
+      border: 1px solid var(--line-dark);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    @media(max-width:800px) {
+      .problem-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .problem-card {
+      background: var(--chalk);
+      padding: 32px 28px;
+    }
+
+    .problem-card .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--coral);
+      font-weight: 600;
+    }
+
+    .problem-card h3 {
+      font-family: var(--body);
+      text-transform: none;
+      font-size: 19px;
+      font-weight: 700;
+      margin: 10px 0 8px;
+      letter-spacing: 0;
+    }
+
+    .problem-card p {
+      font-size: 14.5px;
+      color: #3c4a41;
+    }
+
+    /* ---------- ROLES ---------- */
+    .roles {
+      background: var(--turf-dark);
+      color: var(--chalk);
+    }
+
+    .roles .head {
+      max-width: 640px;
+      margin: 0 auto 56px;
+      text-align: center;
+    }
+
+    .roles .eyebrow {
+      color: var(--amber);
+      justify-content: center;
+    }
+
+    .roles h2 {
+      font-size: clamp(30px, 4.4vw, 46px);
+      margin-top: 12px;
+    }
+
+    .roles p.sub {
+      color: var(--chalk-dim);
+      margin-top: 14px;
+      font-size: 16px;
+    }
+
+    .role-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+    }
+
+    .role-tab {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 11px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--chalk-dim);
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .role-tab.active {
+      background: var(--amber);
+      color: var(--turf-dark);
+      border-color: var(--amber);
+    }
+
+    .role-panels {
+      position: relative;
+    }
+
+    .role-panel {
+      display: none;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .role-panel.active {
+      display: grid;
+    }
+
+    @media(max-width:820px) {
+      .role-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .role-visual {
+      background: var(--turf);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 32px;
+      aspect-ratio: 4/3;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .role-visual .num {
+      font-family: var(--display);
+      font-size: 64px;
+      color: var(--amber);
+      line-height: 0.85;
+    }
+
+    .role-visual .cap {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--chalk-dim);
+      letter-spacing: 0.04em;
+    }
+
+    .role-copy h3 {
+      font-family: var(--body);
+      text-transform: none;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-bottom: 14px;
+    }
+
+    .role-copy>p {
+      color: var(--chalk-dim);
+      font-size: 15.5px;
+      margin-bottom: 22px;
+    }
+
+    .feat-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .feat-list li {
+      display: flex;
+      gap: 12px;
+      font-size: 14.5px;
+      color: var(--chalk);
+    }
+
+    .feat-list li::before {
+      content: '✓';
+      color: var(--amber);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ---------- PROTOTYPE ---------- */
+    .proto {
+      background: var(--chalk);
+    }
+
+    .proto .head {
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+
+    .proto .eyebrow {
+      color: var(--coral);
+    }
+
+    .proto h2 {
+      font-size: clamp(30px, 4.4vw, 46px);
+      margin-top: 12px;
+    }
+
+    .proto p.sub {
+      margin-top: 14px;
+      font-size: 16px;
+      color: #3c4a41;
+      max-width: 58ch;
+    }
+
+    .proto-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .proto-tab {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 11px 20px;
+      border-radius: 999px;
+      border: 1px solid var(--line-dark);
+      background: transparent;
+      color: #3c4a41;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .proto-tab.active {
+      background: var(--turf);
+      color: var(--chalk);
+      border-color: var(--turf);
+    }
+
+    .proto-frame {
+      background: var(--turf-dark);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.4);
+    }
+
+    .frame-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 10px 14px;
+    }
+
+    .frame-bar span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(246, 243, 234, 0.25);
+    }
+
+    .frame-bar span:nth-child(1) {
+      background: #FF6152;
+    }
+
+    .frame-bar span:nth-child(2) {
+      background: #FFB627;
+    }
+
+    .frame-bar span:nth-child(3) {
+      background: #7ED9AE;
+    }
+
+    .frame-bar .frame-label {
+      margin-left: 8px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--chalk-dim);
+      letter-spacing: 0.03em;
+    }
+
+    .proto-panels {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      line-height: 0;
+    }
+
+    .proto-img {
+      display: none;
+      width: 100%;
+      height: auto;
+    }
+
+    .proto-img.active {
+      display: block;
+    }
+
+    .proto-caption {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: #5a6a5e;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    /* ---------- HOW IT WORKS ---------- */
+    .how {
+      background: var(--chalk);
+    }
+
+    .how .head {
+      max-width: 640px;
+      margin-bottom: 56px;
+    }
+
+    .how .eyebrow {
+      color: var(--coral);
+    }
+
+    .how h2 {
+      font-size: clamp(30px, 4.4vw, 46px);
+      margin-top: 12px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px 24px;
+    }
+
+    @media(max-width:900px) {
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width:600px) {
+      .steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .step {
+      position: relative;
+      padding-top: 8px;
+    }
+
+    .step .n {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--turf);
+      background: var(--chalk-dim);
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+
+    .step h3 {
+      font-family: var(--body);
+      text-transform: none;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: #3c4a41;
+    }
+
+    /* ---------- COMPATIBILITY DEMO ---------- */
+    .demo {
+      background: var(--turf);
+      color: var(--chalk);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    @media(max-width:900px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo .eyebrow {
+      color: var(--amber);
+    }
+
+    .demo h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      margin: 12px 0 16px;
+    }
+
+    .demo p.sub {
+      color: var(--chalk-dim);
+      font-size: 15.5px;
+      margin-bottom: 30px;
+      max-width: 48ch;
+    }
+
+    .slider-row {
+      margin-bottom: 22px;
+    }
+
+    .slider-row .lbl {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--chalk-dim);
+    }
+
+    .slider-row .lbl span:last-child {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--line);
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: 3px solid var(--turf-dark);
+      cursor: pointer;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: 3px solid var(--turf-dark);
+      cursor: pointer;
+    }
+
+    .sport-select {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .sport-chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--chalk-dim);
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .sport-chip.active {
+      background: var(--chalk);
+      color: var(--turf-dark);
+      border-color: var(--chalk);
+    }
+
+    .scoreboard {
+      background: var(--turf-dark);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 38px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5);
+    }
+
+    .scoreboard .tag {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--chalk-dim);
+      margin-bottom: 16px;
+    }
+
+    .score-num {
+      font-family: var(--mono);
+      font-size: clamp(64px, 9vw, 96px);
+      font-weight: 600;
+      line-height: 1;
+      color: var(--amber);
+      transition: color .25s;
+    }
+
+    .score-num sup {
+      font-size: 0.35em;
+      font-weight: 600;
+    }
+
+    .score-verdict {
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 18px;
+      margin-top: 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .score-desc {
+      font-size: 13.5px;
+      color: var(--chalk-dim);
+      margin-top: 8px;
+      max-width: 34ch;
+    }
+
+    .score-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--line);
+      border-radius: 3px;
+      margin-top: 26px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 3px;
+      transition: width .25s ease, background .25s ease;
+    }
+
+    /* ---------- TRUST ---------- */
+    .trust {
+      background: var(--chalk);
+    }
+
+    .trust .head {
+      max-width: 640px;
+      margin-bottom: 52px;
+    }
+
+    .trust .eyebrow {
+      color: var(--coral);
+    }
+
+    .trust h2 {
+      font-size: clamp(30px, 4.4vw, 46px);
+      margin-top: 12px;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    @media(max-width:900px) {
+      .trust-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width:560px) {
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .trust-card {
+      background: var(--turf-dark);
+      color: var(--chalk);
+      border-radius: 16px;
+      padding: 26px 22px;
+    }
+
+    .trust-card .ico {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--amber);
+      color: var(--turf-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    .trust-card h3 {
+      font-family: var(--body);
+      text-transform: none;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+      margin-bottom: 6px;
+    }
+
+    .trust-card p {
+      font-size: 13.5px;
+      color: var(--chalk-dim);
+    }
+
+    /* ---------- SPORTS TAGS ---------- */
+    .sports {
+      background: var(--chalk);
+      padding: 56px 0;
+      border-top: 1px solid var(--line-dark);
+      border-bottom: 1px solid var(--line-dark);
+    }
+
+    .sports .wrap {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .sports .lbl {
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #5a6a5e;
+      font-weight: 600;
+    }
+
+    .sport-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sport-tags span {
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--chalk-dim);
+      color: var(--turf-dark);
+    }
+
+    /* ---------- FINAL CTA ---------- */
+    .final {
+      background: linear-gradient(160deg, var(--turf) 0%, var(--turf-dark) 100%);
+      color: var(--chalk);
+      text-align: center;
+    }
+
+    .final h2 {
+      font-size: clamp(32px, 6vw, 58px);
+      max-width: 16ch;
+      margin: 0 auto 18px;
+    }
+
+    .final h2 em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .final p {
+      color: var(--chalk-dim);
+      max-width: 48ch;
+      margin: 0 auto 36px;
+      font-size: 16px;
+    }
+
+    .waitlist {
+      display: flex;
+      gap: 10px;
+      max-width: 460px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .waitlist input {
+      flex: 1;
+      min-width: 220px;
+      padding: 15px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(246, 243, 234, 0.06);
+      color: var(--chalk);
+      font-family: var(--body);
+      font-size: 15px;
+      outline: none;
+    }
+
+    .waitlist input::placeholder {
+      color: var(--chalk-dim);
+    }
+
+    .waitlist input:focus {
+      border-color: var(--amber);
+    }
+
+    .form-msg {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      margin-top: 16px;
+      min-height: 18px;
+      color: var(--amber);
+    }
+
+    .proof {
+      background: var(--chalk);
+      padding: 72px 0;
+    }
+
+    .proof-heading {
+      text-align: center;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: clamp(18px, 2.6vw, 24px);
+      color: var(--ink);
+      margin-bottom: 48px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+
+    @media(max-width:820px) {
+      .proof-grid {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 40px;
+      }
+    }
+
+    @media(max-width:480px) {
+      .proof-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .proof-stat {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .proof-ico {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .proof-ico svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .proof-ico--amber {
+      background: rgba(255, 182, 39, 0.16);
+      color: var(--amber);
+    }
+
+    .proof-ico--coral {
+      background: rgba(255, 97, 82, 0.14);
+      color: var(--coral);
+    }
+
+    .proof-ico--turf {
+      background: rgba(21, 90, 65, 0.14);
+      color: var(--turf);
+    }
+
+    .proof-ico--ink {
+      background: var(--chalk-dim);
+      color: var(--ink);
+    }
+
+    .proof-num {
+      font-family: var(--display);
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .proof-label {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5a6a5e;
+      margin-top: 4px;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      background: var(--turf-dark);
+      color: var(--chalk-dim);
+      padding: 48px 0 28px;
+    }
+
+    .foot-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .foot-brand .logo {
+      margin-bottom: 10px;
+    }
+
+    .foot-brand p {
+      font-size: 13.5px;
+      max-width: 32ch;
+    }
+
+    .foot-cols {
+      display: flex;
+      gap: 56px;
+      flex-wrap: wrap;
+    }
+
+    .foot-col h4 {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--chalk);
+      margin-bottom: 14px;
+    }
+
+    .foot-col a {
+      display: block;
+      font-size: 13.5px;
+      text-decoration: none;
+      color: var(--chalk-dim);
+      margin-bottom: 10px;
+    }
+
+    .foot-col a:hover {
+      color: var(--chalk);
+    }
+
+    .foot-bottom {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    ::selection {
+      background: var(--amber);
+      color: var(--turf-dark);
+    }
+
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    [data-reveal].in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .btn:hover,
+      .btn:active {
+        transform: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <nav class="nav">
-    <a href="#top" class="logo"><span class="logo-dot"></span>KhelConnect</a>
-    <ul class="nav-links">
-      <li><a href="#roles">For you</a></li>
-      <li><a href="#how">How it works</a></li>
-      <li><a href="#compat">AI matching</a></li>
-      <li><a href="#trust">Trust &amp; safety</a></li>
-    </ul>
-    <div class="nav-cta">
-      <a href="#waitlist" class="btn btn-ghost">Log in</a>
-      <a href="#waitlist" class="btn btn-primary">Get early access</a>
+  <header>
+    <nav class="nav">
+      <a href="#top" class="logo"><span class="logo-dot"></span>KhelConnect</a>
+      <ul class="nav-links">
+        <li><a href="#roles">For you</a></li>
+        <li><a href="#prototype">Prototype</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#compat">AI matching</a></li>
+        <li><a href="#trust">Trust &amp; safety</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#waitlist" class="btn btn-ghost">Log in</a>
+        <a href="#waitlist" class="btn btn-primary">Get early access</a>
+      </div>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#roles">For you</a>
+      <a href="#prototype">Prototype</a>
+      <a href="#how">How it works</a>
+      <a href="#compat">AI matching</a>
+      <a href="#trust">Trust &amp; safety</a>
+      <a href="#waitlist">Get early access</a>
     </div>
-    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#roles">For you</a>
-    <a href="#how">How it works</a>
-    <a href="#compat">AI matching</a>
-    <a href="#trust">Trust &amp; safety</a>
-    <a href="#waitlist">Get early access</a>
-  </div>
-</header>
+  </header>
 
-<section class="hero" id="top">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="eyebrow">Players · Coaches · Organizers</span>
-      <h1>Your next game shouldn't live in a <em>WhatsApp group.</em></h1>
-      <p class="lead">SportSphere is one network for everyone who shows up to play. Build a sport-centric profile, get matched by an AI compatibility score, and connect with people, coaches and courts at your level — request, accept, then play.</p>
-      <div class="hero-ctas">
-        <a href="#waitlist" class="btn btn-primary">Join as a player</a>
-        <a href="#waitlist" class="btn btn-ghost">List your court or academy</a>
-      </div>
-      <p class="hero-note">No open chat directory. Every connection is requested and accepted first.</p>
-    </div>
-    <div class="lanes">
-      <svg class="lane-svg" viewBox="0 0 480 380" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram showing players, coaches and organizers converging into one SportSphere hub">
-        <path d="M20 60 C 160 60, 260 150, 300 190" stroke="rgba(246,243,234,0.25)" stroke-width="2" stroke-dasharray="4 6"/>
-        <path d="M20 190 C 140 190, 220 190, 300 190" stroke="rgba(246,243,234,0.25)" stroke-width="2" stroke-dasharray="4 6"/>
-        <path d="M20 320 C 160 320, 260 230, 300 190" stroke="rgba(246,243,234,0.25)" stroke-width="2" stroke-dasharray="4 6"/>
-        <circle cx="300" cy="190" r="58" fill="rgba(255,182,39,0.12)"/>
-        <circle cx="300" cy="190" r="34" fill="#FFB627"/>
-        <text x="300" y="185" text-anchor="middle" font-family="Bebas Neue" font-size="14" fill="#0A2B20" letter-spacing="1">SPORT</text>
-        <text x="300" y="200" text-anchor="middle" font-family="Bebas Neue" font-size="14" fill="#0A2B20" letter-spacing="1">SPHERE</text>
-      </svg>
-      <div class="lane-card" style="top:6%; left:2%;"><span class="sw" style="background:#FFB627;"></span>Player · Skill band verified</div>
-      <div class="lane-card" style="top:47%; left:2%;"><span class="sw" style="background:#FF6152;"></span>Coach · 3 students won regionals</div>
-      <div class="lane-card" style="top:84%; left:2%;"><span class="sw" style="background:#7ED9AE;"></span>Organizer · Turf #4, 6–8 PM open</div>
-    </div>
-  </div>
-</section>
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Players · Coaches · Organizers</span>
+        <h1>Your next game shouldn't live in a <em>WhatsApp group.</em></h1>
+        <p class="lead">KhelConnect is one network for everyone who shows up to play. Build a sport-centric profile, get
+          matched by an perfect partner through AI compatibility score, and connect with people, coaches and courts at
+          your level.</p>
+        <div class="hero-ctas">
+          <a href="#waitlist" class="btn btn-primary">Click here to join us</a>
 
-<section class="problem">
-  <div class="wrap">
-    <div class="head" data-reveal>
-      <span class="eyebrow">The problem</span>
-      <h2>Sport, minus the guesswork.</h2>
+        </div>
+        <p class="hero-note">No open chat directory. Every connection is requested and accepted first.</p>
+      </div>
+      <div class="lanes">
+        <svg class="lane-svg" viewBox="0 0 480 380" fill="none" xmlns="http://www.w3.org/2000/svg" role="img"
+          aria-label="Diagram showing players, coaches and organizers converging into one SportSphere hub">
+          <path d="M20 60 C 160 60, 260 150, 300 190" stroke="rgba(246,243,234,0.25)" stroke-width="2"
+            stroke-dasharray="4 6" />
+          <path d="M20 190 C 140 190, 220 190, 300 190" stroke="rgba(246,243,234,0.25)" stroke-width="2"
+            stroke-dasharray="4 6" />
+          <path d="M20 320 C 160 320, 260 230, 300 190" stroke="rgba(246,243,234,0.25)" stroke-width="2"
+            stroke-dasharray="4 6" />
+          <circle cx="300" cy="190" r="58" fill="rgba(255,182,39,0.12)" />
+          <circle cx="300" cy="190" r="34" fill="#FFB627" />
+          <text x="300" y="185" text-anchor="middle" font-family="Bebas Neue" font-size="14" fill="#0A2B20"
+            letter-spacing="1">KHEL</text>
+          <text x="300" y="200" text-anchor="middle" font-family="Bebas Neue" font-size="14" fill="#0A2B20"
+            letter-spacing="1">CONNECT</text>
+        </svg>
+        <div class="lane-card" style="top:6%; left:2%;"><span class="sw" style="background:#FFB627;"></span>Player ·
+          Skill band verified</div>
+        <div class="lane-card" style="top:47%; left:2%;"><span class="sw" style="background:#FF6152;"></span>Coach · 3
+          students won regionals</div>
+        <div class="lane-card" style="top:84%; left:2%;"><span class="sw" style="background:#7ED9AE;"></span>Organizer ·
+          Turf #4, 6–8 PM open</div>
+      </div>
     </div>
-    <div class="problem-grid" data-reveal>
-      <div class="problem-card">
-        <span class="tag">Players</span>
-        <h3>Stuck in group chats</h3>
-        <p>No easy way to find people at your level, so you play the same five people or nobody at all.</p>
-      </div>
-      <div class="problem-card">
-        <span class="tag">Coaches</span>
-        <h3>No discovery page</h3>
-        <p>Great coaches with a real track record have no public place to show it and get found.</p>
-      </div>
-      <div class="problem-card">
-        <span class="tag">Organizers</span>
-        <h3>Wrong crowd, empty slots</h3>
-        <p>Courts and tournaments can't reach the athletes at the skill level their event actually needs.</p>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="roles" id="roles">
-  <div class="wrap">
-    <div class="head" data-reveal>
-      <span class="eyebrow">One account, three roles</span>
-      <h2>Built for whoever you are on the field.</h2>
-      <p class="sub">A single profile can hold more than one role — plenty of coaches are still players too.</p>
+  <section class="problem">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">The problem</span>
+        <h2>Sport, minus the guesswork.</h2>
+      </div>
+      <div class="problem-grid" data-reveal>
+        <div class="problem-card">
+          <span class="tag">Players</span>
+          <h3>Stuck in group chats</h3>
+          <p>No easy way to find people at your level, so you play the same five people or nobody at all.</p>
+        </div>
+        <div class="problem-card">
+          <span class="tag">Coaches</span>
+          <h3>No discovery page</h3>
+          <p>Great coaches with a real track record have no public place to show it and get found.</p>
+        </div>
+        <div class="problem-card">
+          <span class="tag">Organizers</span>
+          <h3>Wrong crowd, empty slots</h3>
+          <p>Courts and tournaments can't reach the athletes at the skill level their event actually needs.</p>
+        </div>
+        <div class="problem-card">
+          <span class="tag">Athletes</span>
+          <h3>Journey never tracked</h3>
+          <p>Track your journey by posting and let people know your stories.
+        </div>
+      </div>
     </div>
-    <div class="role-tabs" data-reveal>
-      <button class="role-tab active" data-role="players">Players</button>
-      <button class="role-tab" data-role="coaches">Coaches</button>
-      <button class="role-tab" data-role="organizers">Organizers &amp; courts</button>
-    </div>
-    <div class="role-panels" data-reveal>
-      <div class="role-panel active" id="panel-players">
-        <div class="role-visual">
-          <div>
-            <div class="cap">Compatibility score</div>
-            <div class="num">92%</div>
+  </section>
+
+  <section class="roles" id="roles">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">One account, three roles</span>
+        <h2>Built for whoever you are on the field.</h2>
+        <p class="sub">There are three different roles you can choose</p>
+      </div>
+      <div class="role-tabs" data-reveal>
+        <button class="role-tab active" data-role="players">Players</button>
+        <button class="role-tab" data-role="coaches">Coaches</button>
+        <button class="role-tab" data-role="organizers">Organizers &amp; courts</button>
+      </div>
+      <div class="role-panels" data-reveal>
+        <div class="role-panel active" id="panel-players">
+          <div class="role-visual">
+            <div>
+              <div class="cap">Compatibility score</div>
+              <div class="num">92%</div>
+            </div>
+            <div class="cap">vs. Rohan K. · Intermediate Badminton · 2.1 km away</div>
           </div>
-          <div class="cap">vs. Rohan K. · Intermediate Badminton · 2.1 km away</div>
-        </div>
-        <div class="role-copy">
-          <h3>Play people at your actual level.</h3>
-          <p>Join organisations and events, and see a compatibility score before you ever send a request — so the game you show up for is actually a fair one.</p>
-          <ul class="feat-list">
-            <li>Join events and organisations across any sport you play</li>
-            <li>AI compatibility score before you connect with anyone</li>
-            <li>Post and track achievements, visible on your profile</li>
-            <li>Play requests are accepted before chat opens — no cold DMs</li>
-          </ul>
-        </div>
-      </div>
-      <div class="role-panel" id="panel-coaches">
-        <div class="role-visual">
-          <div>
-            <div class="cap">Coaching record</div>
-            <div class="num">14</div>
+          <div class="role-copy">
+            <h3>Play people at your actual level.</h3>
+            <p>Join organisations and events, and see a compatibility score before you ever send a request — so the game
+              you show up for is actually a fair one.</p>
+            <ul class="feat-list">
+              <li>Join events and organisations across any sport you play</li>
+              <li>AI compatibility score before you connect with anyone</li>
+              <li>Post and track achievements, visible on your profile</li>
+              <li>Play requests are accepted before chat opens — no cold DMs</li>
+            </ul>
           </div>
-          <div class="cap">students placed or won this season</div>
         </div>
-        <div class="role-copy">
-          <h3>Let your results advertise you.</h3>
-          <p>A public coaching profile shows your skills, playing record and results — so players who are actually looking for a mentor can find you.</p>
-          <ul class="feat-list">
-            <li>Public profile with skills and past playing record</li>
-            <li>Results that matter: students placed, students who won</li>
-            <li>Discovered by players searching your sport and level</li>
-            <li>Verified badge once you complete e-KYC to charge fees</li>
-          </ul>
-        </div>
-      </div>
-      <div class="role-panel" id="panel-organizers">
-        <div class="role-visual">
-          <div>
-            <div class="cap">Turf #4 · Saturday</div>
-            <div class="num">18/24</div>
+        <div class="role-panel" id="panel-coaches">
+          <div class="role-visual">
+            <div>
+              <div class="cap">Coaching record</div>
+              <div class="num">14</div>
+            </div>
+            <div class="cap">students placed or won this season</div>
           </div>
-          <div class="cap">matched players in your target skill band</div>
+          <div class="role-copy">
+            <h3>Let your results advertise you.</h3>
+            <p>A public coaching profile shows your skills, playing record and results — so players who are actually
+              looking for a mentor can find you.</p>
+            <ul class="feat-list">
+              <li>Public profile with skills and past playing record</li>
+              <li>Results that matter: students placed, students who won</li>
+              <li>Discovered by players searching your sport and level</li>
+              <li>Verified badge once you complete e-KYC to charge fees</li>
+            </ul>
+          </div>
         </div>
-        <div class="role-copy">
-          <h3>Fill slots with the right players.</h3>
-          <p>List courts, matches, practices and tournaments to the exact athlete pool your event needs — more visible events mean more footfall and income.</p>
-          <ul class="feat-list">
-            <li>List courts, matches, practices and tournaments</li>
-            <li>Reach players matched by sport, skill band and location</li>
-            <li>Verified organiser badge before you can collect fees</li>
-            <li>Payments route only to verified, e-KYC'd organisers</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="how" id="how">
-  <div class="wrap">
-    <div class="head" data-reveal>
-      <span class="eyebrow">Methodology</span>
-      <h2>From sign-up to showing up.</h2>
-    </div>
-    <div class="steps" data-reveal>
-      <div class="step">
-        <span class="n">01</span>
-        <h3>Profile &amp; role onboarding</h3>
-        <p>Verify by phone OTP, pick player, coach or organiser — or more than one.</p>
-      </div>
-      <div class="step">
-        <span class="n">02</span>
-        <h3>Browse events &amp; listings</h3>
-        <p>Discover matches, courts and academies seeded across cricket, football, badminton and more.</p>
-      </div>
-      <div class="step">
-        <span class="n">03</span>
-        <h3>Request, then accept</h3>
-        <p>Send a play request. Chat only opens once the other side accepts.</p>
-      </div>
-      <div class="step">
-        <span class="n">04</span>
-        <h3>Check compatibility</h3>
-        <p>See an AI score based on skill band, sport, location and ratings before you commit.</p>
-      </div>
-      <div class="step">
-        <span class="n">05</span>
-        <h3>Play, then rate</h3>
-        <p>Post achievements and leave peer ratings that keep future matches honest.</p>
-      </div>
-      <div class="step">
-        <span class="n">06</span>
-        <h3>Get verified</h3>
-        <p>Organisers and paid coaches complete Aadhaar e-KYC and earn a verified badge.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="demo" id="compat">
-  <div class="wrap demo-grid">
-    <div data-reveal>
-      <span class="eyebrow">The signature feature</span>
-      <h2>See the AI compatibility score for yourself.</h2>
-      <p class="sub">The score weighs self-declared skill band, peer ratings, sport and distance — so one inflated profile isn't enough to fake a good match. Try it below.</p>
-
-      <div class="slider-row">
-        <div class="lbl"><span>Your skill level</span><span id="youVal">6</span></div>
-        <input type="range" min="1" max="10" value="6" id="youSlider">
-      </div>
-      <div class="slider-row">
-        <div class="lbl"><span>Their skill level</span><span id="themVal">5</span></div>
-        <input type="range" min="1" max="10" value="5" id="themSlider">
-      </div>
-
-      <div class="sport-select" id="sportSelect">
-        <button class="sport-chip active" data-sport="Badminton">Badminton</button>
-        <button class="sport-chip" data-sport="Cricket">Cricket</button>
-        <button class="sport-chip" data-sport="Football">Football</button>
-        <button class="sport-chip" data-sport="Tennis">Tennis</button>
-        <button class="sport-chip" data-sport="Basketball">Basketball</button>
-      </div>
-    </div>
-
-    <div class="scoreboard" data-reveal>
-      <span class="tag">Compatibility · <span id="sportLabel">Badminton</span></span>
-      <div class="score-num" id="scoreNum">88<sup>%</sup></div>
-      <div class="score-verdict" id="scoreVerdict">Great match</div>
-      <p class="score-desc" id="scoreDesc">Close skill levels — expect competitive, evenly matched rallies.</p>
-      <div class="score-bar"><div class="score-bar-fill" id="scoreBarFill" style="width:88%"></div></div>
-    </div>
-  </div>
-</section>
-
-<section class="trust" id="trust">
-  <div class="wrap">
-    <div class="head" data-reveal>
-      <span class="eyebrow">Trust &amp; safety</span>
-      <h2>Built so nobody gets scammed by a fake event.</h2>
-    </div>
-    <div class="trust-grid" data-reveal>
-      <div class="trust-card">
-        <div class="ico">01</div>
-        <h3>Phone OTP on every account</h3>
-        <p>No anonymous sign-ups — every profile starts with a verified number.</p>
-      </div>
-      <div class="trust-card">
-        <div class="ico">02</div>
-        <h3>Aadhaar e-KYC for organisers</h3>
-        <p>Coaches and organisers who charge fees complete e-KYC and carry a verified badge.</p>
-      </div>
-      <div class="trust-card">
-        <div class="ico">03</div>
-        <h3>Payments go to verified accounts</h3>
-        <p>Paid events only route money to organisers who've completed verification.</p>
-      </div>
-      <div class="trust-card">
-        <div class="ico">04</div>
-        <h3>Gated chat, always</h3>
-        <p>Requests must be accepted before a conversation opens — plus report and block.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="sports">
-  <div class="wrap">
-    <span class="lbl">Seeded from day one</span>
-    <div class="sport-tags">
-      <span>Cricket</span><span>Football</span><span>Badminton</span><span>Basketball</span><span>Tennis</span><span>Running</span><span>+ more</span>
-    </div>
-  </div>
-</section>
-
-<section class="final" id="waitlist">
-  <div class="wrap">
-    <h2 data-reveal>Find your next game <em>before</em> your next scroll.</h2>
-    <p data-reveal>Join the early access list — we're onboarding one city at a time, starting with players, coaches and courts who are tired of chasing group chats.</p>
-    <form class="waitlist" id="waitForm" data-reveal>
-      <input type="email" id="emailInput" placeholder="you@email.com" required aria-label="Email address">
-      <button type="submit" class="btn btn-primary">Get early access</button>
-    </form>
-    <p class="form-msg" id="formMsg"></p>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-brand">
-        <a href="#top" class="logo"><span class="logo-dot"></span>SportSphere</a>
-        <p>One profile, every sport, every side of the game — players, coaches and organisers in a single network.</p>
-      </div>
-      <div class="foot-cols">
-        <div class="foot-col">
-          <h4>Platform</h4>
-          <a href="#roles">For players</a>
-          <a href="#roles">For coaches</a>
-          <a href="#roles">For organizers</a>
-          <a href="#compat">AI compatibility</a>
-        </div>
-        <div class="foot-col">
-          <h4>Trust</h4>
-          <a href="#trust">Verification</a>
-          <a href="#trust">Safety</a>
-          <a href="#how">How it works</a>
-        </div>
-        <div class="foot-col">
-          <h4>Team</h4>
-          <a href="#waitlist">Get early access</a>
-          <a href="#top">Back to top</a>
+        <div class="role-panel" id="panel-organizers">
+          <div class="role-visual">
+            <div>
+              <div class="cap">Turf #4 · Saturday</div>
+              <div class="num">18/24</div>
+            </div>
+            <div class="cap">matched players in your target skill band</div>
+          </div>
+          <div class="role-copy">
+            <h3>Fill slots with the right players.</h3>
+            <p>List courts, matches, practices and tournaments to the exact athlete pool your event needs — more visible
+              events mean more footfall and income.</p>
+            <ul class="feat-list">
+              <li>List courts, matches, practices and tournaments</li>
+              <li>Reach players matched by sport, skill band and location</li>
+              <li>Verified organiser badge before you can collect fees</li>
+              <li>Payments route only to verified, e-KYC'd organisers</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-    <div class="foot-bottom">
-      <span>© 2026 SportSphere — hackathon prototype</span>
-      <span>Next.js · Supabase · Python matching service</span>
+  </section>
+
+  <section class="proto" id="prototype">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">Working prototype</span>
+        <h2>Already clickable, not just a concept.</h2>
+        <p class="sub">A working web flow — create a profile, browse events, check compatibility scores, and build a
+          sports feed. This is the actual prototype, not a mockup.</p>
+      </div>
+      <div class="proto-tabs" data-reveal>
+        <button class="proto-tab active" data-proto="home">Home feed</button>
+        <button class="proto-tab" data-proto="discover">Discover</button>
+        <button class="proto-tab" data-proto="events">Events</button>
+        <button class="proto-tab" data-proto="profile">My profile</button>
+      </div>
+      <div class="proto-frame" data-reveal>
+        <div class="frame-bar"><span></span><span></span><span></span><span class="frame-label">khelconnect.app</span>
+        </div>
+        <div class="proto-panels">
+          <img src="screenshot-home.jpeg"
+            alt="Home feed showing achievement posts, upcoming events and people you may know" class="proto-img active"
+            data-proto-img="home">
+          <img src="screenshot-discover.jpeg"
+            alt="Discover page with sport, location and skill filters, and compatibility scores for other players"
+            class="proto-img" data-proto-img="discover">
+          <img src="screenshot-events.jpeg"
+            alt="Events page listing matches, practices and tournaments with join progress" class="proto-img"
+            data-proto-img="events">
+          <img src="screenshot-profile.jpeg" alt="Player profile page with achievements, sports, skills and activity"
+            class="proto-img" data-proto-img="profile">
+        </div>
+      </div>
+      <p class="proto-caption" id="protoCaption" data-reveal>Home — your feed of achievements, upcoming events and
+        people you may know.</p>
     </div>
-  </div>
-</footer>
+  </section>
 
-<script>
-  // Mobile nav
-  const burger = document.getElementById('burger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  burger.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    mobileMenu.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-  }));
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">Methodology</span>
+        <h2>From sign-up to showing up.</h2>
+      </div>
+      <div class="steps" data-reveal>
+        <div class="step">
+          <span class="n">01</span>
+          <h3>Profile &amp; role onboarding</h3>
+          <p>Verify by phone OTP, pick player, coach or organiser — or more than one.</p>
+        </div>
+        <div class="step">
+          <span class="n">02</span>
+          <h3>Browse posts</h3>
+          <p>You can browse through all the sports stories</p>
+        </div>
+        <div class="step">
+          <span class="n">03</span>
+          <h3>Request, then accept</h3>
+          <p>Send a play request. Chat only opens once the other side accepts.</p>
+        </div>
+        <div class="step">
+          <span class="n">04</span>
+          <h3>Events</h3>
+          <p>
+            Discover matches, courts and academies seeded across cricket, football, badminton and more.
+          </p>
+        </div>
+        <div class="step">
+          <span class="n">05</span>
+          <h3>Your Network</h3>
+          <p>Browse through your connections and connect with many more.</p>
+        </div>
+        <div class="step">
+          <span class="n">06</span>
+          <h3>Message</h3>
+          <p>Message your connections and book a play.</p>
+        </div>
+        <div class="step">
+          <span class="n">07</span>
+          <h3>Play, then rate</h3>
+          <p>Post achievements and leave peer ratings that keep future matches honest.</p>
+        </div>
+        <div class="step">
+          <span class="n">08</span>
+          <h3>Profile</h3>
+          <p>Build a strong profile and get recognized.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  // Role tabs
-  const roleTabs = document.querySelectorAll('.role-tab');
-  const rolePanels = document.querySelectorAll('.role-panel');
-  roleTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      roleTabs.forEach(t => t.classList.remove('active'));
-      rolePanels.forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById('panel-' + tab.dataset.role).classList.add('active');
+  <section class="demo" id="compat">
+    <div class="wrap demo-grid">
+      <div data-reveal>
+        <span class="eyebrow">The signature feature</span>
+        <h2>See the AI compatibility score for yourself.</h2>
+        <p class="sub">The score weighs self-declared skill band, peer ratings, sport and distance — so one inflated
+          profile isn't enough to fake a good match. Try it below.</p>
+
+        <div class="slider-row">
+          <div class="lbl"><span>Your skill level</span><span id="youVal">6</span></div>
+          <input type="range" min="1" max="10" value="6" id="youSlider">
+        </div>
+        <div class="slider-row">
+          <div class="lbl"><span>Their skill level</span><span id="themVal">5</span></div>
+          <input type="range" min="1" max="10" value="5" id="themSlider">
+        </div>
+
+        <div class="sport-select" id="sportSelect">
+          <button class="sport-chip active" data-sport="Badminton">Badminton</button>
+          <button class="sport-chip active" data-sport="Badminton">Chess</button>
+          <button class="sport-chip active" data-sport="Badminton">Swimming</button>
+          <button class="sport-chip active" data-sport="Badminton">Kabbadi</button>
+          <button class="sport-chip" data-sport="Cricket">Cricket</button>
+          <button class="sport-chip" data-sport="Football">Football</button>
+          <button class="sport-chip" data-sport="Tennis">Tennis</button>
+          <button class="sport-chip" data-sport="Basketball">Basketball</button>
+        </div>
+      </div>
+
+      <div class="scoreboard" data-reveal>
+        <span class="tag">Compatibility · <span id="sportLabel">Badminton</span></span>
+        <div class="score-num" id="scoreNum">88<sup>%</sup></div>
+        <div class="score-verdict" id="scoreVerdict">Great match</div>
+        <p class="score-desc" id="scoreDesc">Close skill levels — expect competitive, evenly matched rallies.</p>
+        <div class="score-bar">
+          <div class="score-bar-fill" id="scoreBarFill" style="width:88%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust" id="trust">
+    <div class="wrap">
+      <div class="head" data-reveal>
+        <span class="eyebrow">Trust &amp; safety</span>
+        <h2>Built so nobody gets scammed by a fake event.</h2>
+      </div>
+      <div class="trust-grid" data-reveal>
+        <div class="trust-card">
+          <div class="ico">01</div>
+          <h3>Phone OTP on every account</h3>
+          <p>No anonymous sign-ups — every profile starts with a verified number.</p>
+        </div>
+        <div class="trust-card">
+          <div class="ico">02</div>
+          <h3>Aadhaar e-KYC for organisers</h3>
+          <p>Coaches and organisers who charge fees complete e-KYC and carry a verified badge.</p>
+        </div>
+        <div class="trust-card">
+          <div class="ico">03</div>
+          <h3>Payments go to verified accounts</h3>
+          <p>Paid events only route money to organisers who've completed verification.</p>
+        </div>
+        <div class="trust-card">
+          <div class="ico">04</div>
+          <h3>Gated chat, always</h3>
+          <p>Requests must be accepted before a conversation opens — plus report and block.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="waitlist">
+    <div class="wrap">
+      <h2 data-reveal>Find your next game <em>before</em> your next scroll.</h2>
+      <p data-reveal>Join the early access list — we're onboarding one city at a time, starting with players, coaches
+        and courts who are tired of chasing group chats.</p>
+      <form class="waitlist" id="waitForm" data-reveal>
+        <input type="email" id="emailInput" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit" class="btn btn-primary">Get early access</button>
+      </form>
+      <p class="form-msg" id="formMsg"></p>
+    </div>
+  </section>
+  <section class="proof">
+    <div class="wrap">
+      <p class="proof-heading">Loved by players, coaches &amp; courts across the city</p>
+      <div class="proof-grid">
+        <div class="proof-stat">
+          <div class="proof-ico proof-ico--amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 21h18" />
+              <path d="M6 21V7l6-4 6 4v14" />
+              <path d="M10 21v-6h4v6" />
+              <path d="M10 9h.01" />
+              <path d="M14 9h.01" />
+              <path d="M10 13h.01" />
+              <path d="M14 13h.01" />
+            </svg>
+          </div>
+          <div class="proof-num">10k+</div>
+          <div class="proof-label">Players</div>
+        </div>
+
+        <div class="proof-stat">
+          <div class="proof-ico proof-ico--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="proof-num">500+</div>
+          <div class="proof-label">Coaches</div>
+        </div>
+
+        <div class="proof-stat">
+          <div class="proof-ico proof-ico--turf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 2a15 15 0 0 1 0 20" />
+              <path d="M12 2a15 15 0 0 0 0 20" />
+              <path d="M2 12h20" />
+            </svg>
+          </div>
+          <div class="proof-num">190+</div>
+          <div class="proof-label">Courts &amp; venues</div>
+        </div>
+
+        <div class="proof-stat">
+          <div class="proof-ico proof-ico--ink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="8" r="6" />
+              <path d="M9 14.5 7 22l5-3 5 3-2-7.5" />
+            </svg>
+          </div>
+          <div class="proof-num">50+</div>
+          <div class="proof-label">Cities live</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a href="#top" class="logo"><span class="logo-dot"></span>SportSphere</a>
+          <p>One profile, every sport, every side of the game — players, coaches and organisers in a single network.</p>
+        </div>
+        <div class="foot-cols">
+          <div class="foot-col">
+            <h4>Platform</h4>
+            <a href="#roles">For players</a>
+            <a href="#roles">For coaches</a>
+            <a href="#roles">For organizers</a>
+            <a href="#compat">AI compatibility</a>
+          </div>
+          <div class="foot-col">
+            <h4>Trust</h4>
+            <a href="#trust">Verification</a>
+            <a href="#trust">Safety</a>
+            <a href="#how">How it works</a>
+          </div>
+          <div class="foot-col">
+            <h4>Team</h4>
+            <a href="#waitlist">Get early access</a>
+            <a href="#top">Back to top</a>
+          </div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 KhelConnect — hackathon prototype</span>
+        <span>Next.js · Supabase · Python matching service</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    burger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-  });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }));
 
-  // Compatibility demo
-  const youSlider = document.getElementById('youSlider');
-  const themSlider = document.getElementById('themSlider');
-  const youVal = document.getElementById('youVal');
-  const themVal = document.getElementById('themVal');
-  const scoreNum = document.getElementById('scoreNum');
-  const scoreVerdict = document.getElementById('scoreVerdict');
-  const scoreDesc = document.getElementById('scoreDesc');
-  const scoreBarFill = document.getElementById('scoreBarFill');
-  const sportLabel = document.getElementById('sportLabel');
-  const sportChips = document.querySelectorAll('.sport-chip');
-
-  function updateScore(){
-    const you = parseInt(youSlider.value, 10);
-    const them = parseInt(themSlider.value, 10);
-    youVal.textContent = you;
-    themVal.textContent = them;
-    const diff = Math.abs(you - them);
-    let score = Math.round(100 - diff * 9.5);
-    score = Math.max(38, Math.min(98, score));
-
-    scoreNum.innerHTML = score + '<sup>%</sup>';
-    scoreBarFill.style.width = score + '%';
-
-    let verdict, desc, color;
-    if (score >= 82){
-      verdict = 'Great match'; color = '#7ED9AE';
-      desc = 'Close skill levels — expect competitive, evenly matched play.';
-    } else if (score >= 60){
-      verdict = 'Good match'; color = '#FFB627';
-      desc = 'A workable gap in level — a solid game with room to push each other.';
-    } else {
-      verdict = 'Different pace'; color = '#FF6152';
-      desc = 'Skill levels are far apart — better suited as coach and student than as opponents.';
-    }
-    scoreVerdict.textContent = verdict;
-    scoreDesc.textContent = desc;
-    scoreNum.style.color = color;
-    scoreBarFill.style.background = color;
-  }
-  youSlider.addEventListener('input', updateScore);
-  themSlider.addEventListener('input', updateScore);
-  sportChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      sportChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      sportLabel.textContent = chip.dataset.sport;
+    // Role tabs
+    const roleTabs = document.querySelectorAll('.role-tab');
+    const rolePanels = document.querySelectorAll('.role-panel');
+    roleTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        roleTabs.forEach(t => t.classList.remove('active'));
+        rolePanels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.role).classList.add('active');
+      });
     });
-  });
-  updateScore();
 
-  // Waitlist form (client-side only, prototype)
-  const waitForm = document.getElementById('waitForm');
-  const formMsg = document.getElementById('formMsg');
-  waitForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('emailInput').value.trim();
-    if (!email){ return; }
-    formMsg.textContent = "You're on the list — we'll email " + email + ' when your city goes live.';
-    waitForm.reset();
-  });
+    // Prototype screenshot tabs
+    const protoTabs = document.querySelectorAll('.proto-tab');
+    const protoImgs = document.querySelectorAll('.proto-img');
+    const protoCaption = document.getElementById('protoCaption');
+    const protoCaptions = {
+      home: 'Home — your feed of achievements, upcoming events and people you may know.',
+      discover: 'Discover — filter by sport, location and skill, and see a compatibility score before you connect.',
+      events: 'Events — matches, practices and tournaments, with live join progress.',
+      profile: 'My Profile — achievements, sports, skills and activity, all in one public page.'
+    };
+    protoTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        protoTabs.forEach(t => t.classList.remove('active'));
+        protoImgs.forEach(i => i.classList.remove('active'));
+        tab.classList.add('active');
+        const key = tab.dataset.proto;
+        document.querySelector('.proto-img[data-proto-img="' + key + '"]').classList.add('active');
+        protoCaption.textContent = protoCaptions[key];
+      });
+    });
 
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('[data-reveal]');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting){
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
+    // Compatibility demo
+    const youSlider = document.getElementById('youSlider');
+    const themSlider = document.getElementById('themSlider');
+    const youVal = document.getElementById('youVal');
+    const themVal = document.getElementById('themVal');
+    const scoreNum = document.getElementById('scoreNum');
+    const scoreVerdict = document.getElementById('scoreVerdict');
+    const scoreDesc = document.getElementById('scoreDesc');
+    const scoreBarFill = document.getElementById('scoreBarFill');
+    const sportLabel = document.getElementById('sportLabel');
+    const sportChips = document.querySelectorAll('.sport-chip');
+
+    function updateScore() {
+      const you = parseInt(youSlider.value, 10);
+      const them = parseInt(themSlider.value, 10);
+      youVal.textContent = you;
+      themVal.textContent = them;
+      const diff = Math.abs(you - them);
+      let score = Math.round(100 - diff * 9.5);
+      score = Math.max(38, Math.min(98, score));
+
+      scoreNum.innerHTML = score + '<sup>%</sup>';
+      scoreBarFill.style.width = score + '%';
+
+      let verdict, desc, color;
+      if (score >= 82) {
+        verdict = 'Great match'; color = '#7ED9AE';
+        desc = 'Close skill levels — expect competitive, evenly matched play.';
+      } else if (score >= 60) {
+        verdict = 'Good match'; color = '#FFB627';
+        desc = 'A workable gap in level — a solid game with room to push each other.';
+      } else {
+        verdict = 'Different pace'; color = '#FF6152';
+        desc = 'Skill levels are far apart — better suited as coach and student than as opponents.';
       }
+      scoreVerdict.textContent = verdict;
+      scoreDesc.textContent = desc;
+      scoreNum.style.color = color;
+      scoreBarFill.style.background = color;
+    }
+    youSlider.addEventListener('input', updateScore);
+    themSlider.addEventListener('input', updateScore);
+    sportChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        sportChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        sportLabel.textContent = chip.dataset.sport;
+      });
     });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => io.observe(el));
-</script>
+    updateScore();
+
+    // Waitlist form (client-side only, prototype)
+    const waitForm = document.getElementById('waitForm');
+    const formMsg = document.getElementById('formMsg');
+    waitForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value.trim();
+      if (!email) { return; }
+      formMsg.textContent = "You're on the list — we'll email " + email + ' when your city goes live.';
+      waitForm.reset();
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => io.observe(el));
+  </script>
 </body>
+
 </html>
