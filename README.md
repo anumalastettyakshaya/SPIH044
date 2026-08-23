@@ -1,4 +1,4 @@
-# SportSphere (KhelConnect) — Smart Sports Networking Platform
+# KhelConnect— LinkedIn for sports
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/anumalastettyakshaya/SPIH044)
 
@@ -19,6 +19,7 @@ A smart sports networking web application connecting **Players**, **Coaches**, a
 
 - **Vercel Deploy:** [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https://github.com/anumalastettyakshaya/SPIH044)
 - **GitHub Repository:** [anumalastettyakshaya/SPIH044](https://github.com/anumalastettyakshaya/SPIH044)
+- **Live Landing page link:** https://anumalastettyakshaya.github.io/SPIH044/
 
 ---
 
@@ -39,29 +40,6 @@ A smart sports networking web application connecting **Players**, **Coaches**, a
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Database / Auth:** [Supabase](https://supabase.com/)
 - **Deployment:** [Vercel](https://vercel.com/)
-
----
-
-## 💻 Getting Started Locally
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/anumalastettyakshaya/SPIH044.git
-   cd SPIH044
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open in browser:**
-   Navigate to [http://localhost:3000](http://localhost:3000).
 
 ---
 
